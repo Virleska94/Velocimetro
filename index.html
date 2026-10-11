@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de 21 Velocidades - Bicicleta Montañera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #fff;
+        }
+        .result-box {
+            background-color: #eef2f7;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 5px solid #3498db;
+        }
+        .gear-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .warning {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Control de 21 Velocidades (Shimano)</h2>
+
+    <div class="control-group">
+        <label for="plato">Plato Delantero (Mando Izquierdo):</label>
+        <select id="plato" onchange="calcularVelocidad()">
+            <option value="1">Plato 1 (Pequeño - Subida)</option>
+            <option value="2" selected>Plato 2 (Mediano - Terreno Plano)</option>
+            <option value="3">Plato 3 (Grande - Bajada / Velocidad)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label for="pinon">Piñón Trasero (Mando Derecho):</label>
+        <select id="pinon" onchange="calcularVelocidad()">
+            <option value="1">Piñón 1 (Grande - Ligero)</option>
+            <option value="2">Piñón 2</option>
+            <option value="3">Piñón 3</option>
+            <option value="4" selected>Piñón 4 (Medio)</option>
+            <option value="5">Piñón 5</option>
+            <option value="6">Piñón 6</option>
+            <option value="7">Piñón 7 (Pequeño - Pesado)</option>
+        </select>
+    </div>
+
+    <div class="result-box">
+        <div>Velocidad Selección Combinada:</div>
+        <div class="gear-number" id="velocidadNum">Velocidad 11 / 21</div>
+        <p id="descripcion">Ideal para terreno plano o falso plano a ritmo constante.</p>
+        <div id="alertaCruce" class="warning">⚠️ Cadena muy cruzada. Evita esta combinación para no desgastar los piñones y la cadena.</div>
+    </div>
+</div>
+
+<script>
+function calcularVelocidad() {
+    const plato = parseInt(document.getElementById('plato').value);
+    const pinon = parseInt(document.getElementById('pinon').value);
+    
+    // Cálculo aproximado del 1 al 21
+    const velocidadTotal = ((plato - 1) * 7) + pinon;
+
+    document.getElementById('velocidadNum').innerText = `Velocidad ${velocidadTotal} / 21`;
+
+    const alerta = document.getElementById('alertaCruce');
+    const descripcion = document.getElementById('descripcion');
+
+    // Detección de cadena cruzada
+    const esCadenaCruzada = (plato === 1 && pinon >= 6) || (plato === 3 && pinon <= 2);
+    alerta.style.display = esCadenaCruzada ? 'block' : 'none';
+
+    // Descripción según la marcha
+    if (plato === 1) {
+        descripcion.innerText = "Uso: Ascensos pronunciados o empinados. Pedaleo suave.";
+    } else if (plato === 2) {
+        descripcion.innerText = "Uso: Terrenos mixtos, planos y pequeñas pendientes. Uso general.";
+    } else if (plato === 3) {
+        descripcion.innerText = "Uso: Bajadas o alta velocidad en planos paved. Exige mayor fuerza.";
+    }
+}
+</script>
+
+</body>
+</html>
